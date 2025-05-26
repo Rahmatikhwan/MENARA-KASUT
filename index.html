@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Game 2 - Peraturan</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Arial Black', 'Arial', sans-serif;
+      background: linear-gradient(135deg, #F4A460 0%, #DEB887 50%, #D2B48C 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: backgroundShift 8s ease-in-out infinite alternate;
+    }
+    
+    @keyframes backgroundShift {
+      0% { background: linear-gradient(135deg, #F4A460 0%, #DEB887 50%, #D2B48C 100%); }
+      100% { background: linear-gradient(135deg, #D2B48C 0%, #DEB887 50%, #F4A460 100%); }
+    }
+    
+    .tv-container {
+      width: 100%;
+      max-width: 1200px;
+      background: linear-gradient(145deg, #B22222, #8B4513);
+      border-radius: 30px;
+      padding: 40px;
+      box-shadow: 
+        0 20px 60px rgba(0,0,0,0.6),
+        inset 0 2px 0 rgba(255,255,255,0.1),
+        inset 0 -2px 0 rgba(0,0,0,0.3);
+      position: relative;
+      border: 8px solid #A0522D;
+      animation: tvGlow 4s ease-in-out infinite alternate;
+    }
+    
+    @keyframes tvGlow {
+      0% { 
+        box-shadow: 
+          0 20px 60px rgba(0,0,0,0.6),
+          0 0 30px rgba(255,215,0,0.2),
+          inset 0 2px 0 rgba(255,255,255,0.1);
+      }
+      100% { 
+        box-shadow: 
+          0 20px 60px rgba(0,0,0,0.6),
+          0 0 50px rgba(255,215,0,0.4),
+          inset 0 2px 0 rgba(255,255,255,0.1);
+      }
+    }
+    
+    .tv-container::before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 15px;
+      bottom: 15px;
+      border: 3px solid #CD853F;
+      border-radius: 20px;
+      pointer-events: none;
+    }
+    
+    .main-content {
+      display: flex;
+      gap: 30px;
+      align-items: stretch;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .screen-area {
+      flex: 1;
+      background: linear-gradient(145deg, #2F4F4F, #708090);
+      border-radius: 15px;
+      padding: 30px;
+      border: 4px solid #4682B4;
+      position: relative;
+      overflow: hidden;
+      min-height: 450px;
+      box-shadow: 
+        inset 0 0 30px rgba(0,0,0,0.3),
+        0 5px 15px rgba(0,0,0,0.4);
+    }
+    
+    .screen-area::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: screenScan 3s infinite;
+    }
+    
+    @keyframes screenScan {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    
+    .title {
+      font-size: 3.5em;
+      font-weight: 900;
+      color: #F5DEB3;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      margin-bottom: 25px;
+      text-shadow: 
+        3px 3px 0 #8B4513,
+        6px 6px 10px rgba(0,0,0,0.5);
+      animation: titlePulse 2s ease-in-out infinite alternate;
+      line-height: 1.1;
+    }
+    
+    @keyframes titlePulse {
+      0% { 
+        transform: scale(1);
+        text-shadow: 
+          3px 3px 0 #8B4513,
+          6px 6px 10px rgba(0,0,0,0.5);
+      }
+      100% { 
+        transform: scale(1.02);
+        text-shadow: 
+          3px 3px 0 #8B4513,
+          6px 6px 15px rgba(0,0,0,0.7),
+          0 0 20px rgba(245,222,179,0.3);
+      }
+    }
+    
+    .game-tag {
+      display: inline-block;
+      background: linear-gradient(45deg, #FF4500, #FF6347);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-size: 1.4em;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 25px;
+      box-shadow: 
+        0 6px 12px rgba(0,0,0,0.4),
+        inset 0 2px 0 rgba(255,255,255,0.2);
+      animation: tagGlow 2.5s ease-in-out infinite alternate;
+    }
+    
+    @keyframes tagGlow {
+      0% { 
+        box-shadow: 
+          0 6px 12px rgba(0,0,0,0.4),
+          inset 0 2px 0 rgba(255,255,255,0.2);
+      }
+      100% { 
+        box-shadow: 
+          0 6px 12px rgba(0,0,0,0.4),
+          0 0 25px rgba(255,69,0,0.6),
+          inset 0 2px 0 rgba(255,255,255,0.2);
+      }
+    }
+    
+    .rules-list {
+      list-style: none;
+      color: #F0F8FF;
+      font-size: 1.2em;
+      line-height: 1.8;
+      font-weight: 500;
+    }
+    
+    .rules-list li {
+      margin-bottom: 20px;
+      padding: 15px 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      border-left: 6px solid #FFD700;
+      backdrop-filter: blur(5px);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .rules-list li::before {
+      content: '●';
+      color: #FFD700;
+      font-size: 1.5em;
+      margin-right: 15px;
+      font-weight: bold;
+      animation: bulletPulse 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes bulletPulse {
+      0% { color: #FFD700; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
+      100% { color: #FFA500; text-shadow: 0 0 15px rgba(255,215,0,0.8); }
+    }
+    
+    .rules-list li:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateX(10px) scale(1.02);
+      border-left-color: #FFA500;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    
+    .rules-list li::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.6s ease;
+    }
+    
+    .rules-list li:hover::after {
+      left: 100%;
+    }
+    
+    .control-panel {
+      width: 150px;
+      background: linear-gradient(145deg, #5F8A5F, #4F7F4F);
+      border-radius: 20px;
+      padding: 25px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      border: 4px solid #228B22;
+      box-shadow: 
+        inset 0 0 20px rgba(0,0,0,0.2),
+        0 5px 15px rgba(0,0,0,0.4);
+      position: relative;
+    }
+    
+    .control-panel::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #32CD32, #228B22, #006400);
+      border-radius: 22px;
+      z-index: -1;
+      animation: controlPanelGlow 3s ease-in-out infinite alternate;
+    }
+    
+    @keyframes controlPanelGlow {
+      0% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+    
+    .traffic-light {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #FF6347, #DC143C);
+      box-shadow: 
+        0 0 20px rgba(220,20,60,0.6),
+        inset 0 3px 0 rgba(255,255,255,0.3),
+        inset 0 -3px 0 rgba(0,0,0,0.3);
+      animation: lightFlicker 2s ease-in-out infinite alternate;
+      position: relative;
+    }
+    
+    @keyframes lightFlicker {
+      0% { 
+        box-shadow: 
+          0 0 20px rgba(220,20,60,0.6),
+          inset 0 3px 0 rgba(255,255,255,0.3);
+        transform: scale(1);
+      }
+      100% { 
+        box-shadow: 
+          0 0 40px rgba(220,20,60,0.9),
+          0 0 60px rgba(255,69,0,0.4),
+          inset 0 3px 0 rgba(255,255,255,0.4);
+        transform: scale(1.05);
+      }
+    }
+    
+    .traffic-light::after {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 25%;
+      width: 30%;
+      height: 30%;
+      background: radial-gradient(circle, rgba(255,255,255,0.8), transparent);
+      border-radius: 50%;
+      animation: lightShine 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes lightShine {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+    
+    .speaker-grille {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+    }
+    
+    .speaker-line {
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #2F4F2F, #000000);
+      border-radius: 2px;
+      animation: speakerPulse 1.5s ease-in-out infinite alternate;
+    }
+    
+    .speaker-line:nth-child(1) { width: 45px; animation-delay: 0s; }
+    .speaker-line:nth-child(2) { width: 55px; animation-delay: 0.1s; }
+    .speaker-line:nth-child(3) { width: 60px; animation-delay: 0.2s; }
+    .speaker-line:nth-child(4) { width: 55px; animation-delay: 0.3s; }
+    .speaker-line:nth-child(5) { width: 50px; animation-delay: 0.4s; }
+    .speaker-line:nth-child(6) { width: 45px; animation-delay: 0.5s; }
+    .speaker-line:nth-child(7) { width: 40px; animation-delay: 0.6s; }
+    
+    @keyframes speakerPulse {
+      0% { 
+        background: linear-gradient(90deg, #2F4F2F, #000000);
+        transform: scaleX(1);
+      }
+      100% { 
+        background: linear-gradient(90deg, #4F7F4F, #2F4F2F);
+        transform: scaleX(1.1);
+      }
+    }
+    
+    .sound-controls {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 1000;
+    }
+    
+    .sound-btn {
+      padding: 15px 25px;
+      background: linear-gradient(45deg, #FF4500, #FF6347);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .sound-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+    }
+    
+    .sound-btn:active {
+      transform: translateY(0) scale(0.95);
+    }
+    
+    .volume-control {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(178,34,34,0.9);
+      padding: 12px 18px;
+      border-radius: 25px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    
+    .volume-slider {
+      width: 120px;
+      height: 6px;
+      border-radius: 3px;
+      background: #ddd;
+      outline: none;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
+    
+    .volume-slider:hover {
+      opacity: 1;
+    }
+    
+    .volume-slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #FFD700;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    }
+    
+    .status-indicator {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      padding: 12px 20px;
+      background: rgba(178,34,34,0.9);
+      border-radius: 20px;
+      color: white;
+      font-weight: bold;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .playing { color: #90EE90; }
+    .paused { color: #FFB6C1; }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        flex-direction: column;
+      }
+      
+      .control-panel {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 20px;
+      }
+      
+      .title {
+        font-size: 2.5em;
+      }
+      
+      .rules-list {
+        font-size: 1.1em;
+      }
+      
+      .tv-container {
+        padding: 25px;
+      }
+    }
+    
+    /* Animation delays for staggered entry */
+    .rules-list li:nth-child(1) { animation: slideInUp 0.6s ease forwards; animation-delay: 0.2s; opacity: 0; }
+    .rules-list li:nth-child(2) { animation: slideInUp 0.6s ease forwards; animation-delay: 0.4s; opacity: 0; }
+    .rules-list li:nth-child(3) { animation: slideInUp 0.6s ease forwards; animation-delay: 0.6s; opacity: 0; }
+    
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="tv-container">
+    <div class="main-content">
+      <div class="screen-area">
+        <h1 class="title">PERATURAN:</h1>
+        <div class="game-tag">GAME 2</div>
+        <ul class="rules-list">
+          <li>Peserta dikehendaki menyusun kasut melebihi ketinggian 1m.</li>
+          <li>Peserta diwajibkan menggunakan hanya 7 pasang kasut.</li>
+          <li>Menara kasut haruslah bertahan selama 5 saat dan 15 minit diberikan untuk mendirikan menara.</li>
+        </ul>
+      </div>
+      
+      <div class="control-panel">
+        <div class="traffic-light"></div>
+        <div class="traffic-light"></div>
+        <div class="speaker-grille">
+          <div class="speaker-line"></div>
+          <div class="speaker-line"></div>
+          <div class="speaker-line"></div>
+          <div class="speaker-line"></div>
+          <div class="speaker-line"></div>
+          <div class="speaker-line"></div>
+          <div class="speaker-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Indicator -->
+  <div class="status-indicator" id="statusIndicator">🎵 Audio Ready</div>
+
+  <!-- Sound Controls -->
+  <div class="sound-controls">
+    <button class="sound-btn" id="playPauseBtn">▶ Play Sound</button>
+    <div class="volume-control">
+      <span style="color: white;">🔊</span>
+      <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="50">
+    </div>
+  </div>
+
+  <script>
+    class RetroAudioManager {
+      constructor() {
+        this.playPauseBtn = document.getElementById('playPauseBtn');
+        this.volumeSlider = document.getElementById('volumeSlider');
+        this.statusIndicator = document.getElementById('statusIndicator');
+        
+        this.isPlaying = false;
+        this.audioContext = null;
+        this.oscillators = [];
+        this.gainNode = null;
+        
+        this.init();
+      }
+      
+      init() {
+        // Event listeners
+        this.playPauseBtn.addEventListener('click', () => this.togglePlayPause());
+        this.volumeSlider.addEventListener('input', (e) => this.updateVolume(e.target.value));
+        
+        // Initialize Web Audio API
+        this.initAudioContext();
+      }
+      
+      initAudioContext() {
+        try {
+          const AudioCtx = AudioContext || webkitAudioContext;
+          this.audioContext = new AudioCtx();
+          this.createRetroSoundscape();
+          this.updateStatus('🎵 Retro Audio Ready', 'ready');
+        } catch (error) {
+          this.updateStatus('❌ Audio Not Available', 'error');
+        }
+      }
+      
+      createRetroSoundscape() {
+        // Create multiple layers for a rich retro soundscape
+        this.gainNode = this.audioContext.createGain();
+        this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+        this.gainNode.connect(this.audioContext.destination);
+        
+        // Create different oscillators for ambient retro sound
+        this.createOscillatorLayer(110, 'sine', 0.1);      // Deep bass
+        this.createOscillatorLayer(220, 'sawtooth', 0.05);  // Mid frequency
+        this.createOscillatorLayer(440, 'triangle', 0.03);  // Higher harmonics
+        this.createOscillatorLayer(330, 'sine', 0.04);      // Ambient layer
+      }
+      
+      createOscillatorLayer(frequency, type, volume) {
+        const oscillator = this.audioContext.createOscillator();
+        const layerGain = this.audioContext.createGain();
+        
+        oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
+        oscillator.type = type;
+        
+        layerGain.gain.setValueAtTime(volume, this.audioContext.currentTime);
+        
+        oscillator.connect(layerGain);
+        layerGain.connect(this.gainNode);
+        
+        this.oscillators.push({ oscillator, layerGain, baseFreq: frequency, baseVolume: volume });
+      }
+      
+      togglePlayPause() {
+        if (!this.audioContext) {
+          this.updateStatus('❌ Audio not available', 'error');
+          return;
+        }
+        
+        if (!this.isPlaying) {
+          this.startRetroAudio();
+        } else {
+          this.stopRetroAudio();
+        }
+        
+        this.isPlaying = !this.isPlaying;
+      }
+      
+      startRetroAudio() {
+        if (this.audioContext.state === 'suspended') {
+          this.audioContext.resume();
+        }
+        
+        // Start all oscillators
+        this.oscillators.forEach(layer => {
+          layer.oscillator.start();
+        });
+        
+        // Fade in
+        const volume = this.volumeSlider.value / 100;
+        this.gainNode.gain.linearRampToValueAtTime(volume * 0.3, this.audioContext.currentTime + 1);
+        
+        this.playPauseBtn.innerHTML = '⏸️ Pause Sound';
+        this.updateStatus('🎵 Playing Retro Vibes', 'playing');
+        
+        // Start modulation for dynamic sound
+        this.startModulation();
+      }
+      
+      stopRetroAudio() {
+        // Fade out
+        this.gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.5);
+        
+        setTimeout(() => {
+          this.oscillators.forEach(layer => {
+            layer.oscillator.stop();
+          });
+          
+          // Recreate oscillators for next play
+          this.oscillators = [];
+          this.createRetroSoundscape();
+        }, 500);
+        
+        this.playPauseBtn.innerHTML = '▶ Play Sound';
+        this.updateStatus('⏸️ Paused', 'paused');
+      }
+      
+      startModulation() {
+        if (!this.isPlaying) return;
+        
+        const time = this.audioContext.currentTime;
+        
+        // Modulate frequencies for ambient effect
+        this.oscillators.forEach((layer, index) => {
+          const modAmount = 5 + index * 2;
+          const modSpeed = 0.3 + index * 0.1;
+          const newFreq = layer.baseFreq + Math.sin(time * modSpeed) * modAmount;
+          
+          layer.oscillator.frequency.setValueAtTime(newFreq, time);
+          
+          // Subtle volume modulation
+          const volumeMod = layer.baseVolume + Math.cos(time * modSpeed * 0.7) * (layer.baseVolume * 0.2);
+          layer.layerGain.gain.setValueAtTime(volumeMod, time);
+        });
+        
+        // Continue modulation
+        setTimeout(() => this.startModulation(), 100);
+      }
+      
+      updateVolume(value) {
+        const volume = value / 100;
+        
+        if (this.gainNode && this.isPlaying) {
+          this.gainNode.gain.setValueAtTime(volume * 0.3, this.audioContext.currentTime);
+        }
+      }
+      
+      updateStatus(message, type) {
+        this.statusIndicator.textContent = message;
+        this.statusIndicator.className = `status-indicator ${type}`;
+      }
+    }
+    
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      const audioManager = new RetroAudioManager();
+      
+      // Add interactive hover effects to speaker grille
+      const speakerLines = document.querySelectorAll('.speaker-line');
+      speakerLines.forEach((line, index) => {
+        line.addEventListener('mouseenter', () => {
+          line.style.animationDuration = '0.5s';
+          line.style.transform = 'scaleX(1.2)';
+        });
+        
+        line.addEventListener('mouseleave', () => {
+          line.style.animationDuration = '1.5s';
+          line.style.transform = 'scaleX(1)';
+        });
+      });
+      
+      // Keyboard shortcut
+      document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          document.getElementById('playPauseBtn').click();
+        }
+      });
+    });
+    
+    // Add some extra retro effects
+    setInterval(() => {
+      const lights = document.querySelectorAll('.traffic-light');
+      lights.forEach(light => {
+        const randomDelay = Math.random() * 0.5;
+        light.style.animationDelay = `${randomDelay}s`;
+      });
+    }, 5000);
+  </script>
+</body>
+</html>
